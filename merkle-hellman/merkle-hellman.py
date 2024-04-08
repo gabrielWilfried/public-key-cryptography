@@ -32,6 +32,84 @@
 
 This code demonstrates the basic implementation of the Merkle-Hellman knapsack cryptosystem. However, it's worth noting that this cryptosystem is vulnerable to certain attacks and is not typically used in practice due to its lack of security.
 '''
+# import random
+
+# # Generate a superincreasing knapsack
+# def generate_superincreasing_knapsack(n):
+#     q = random.randint(n + 1, 2 * n)
+#     w = [random.randint(1, q - 1) for _ in range(n)]
+#     return q, w
+
+# # Generate a private and public key pair
+# def generate_key_pair(n):
+#     q, w = generate_superincreasing_knapsack(n)
+#     r = random.randint(2, q - 1)
+#     beta = [(r * wi) % q for wi in w]
+#     return (q, w), (q, beta)  # Return private key as tuple (q, w) and public key as tuple (q, beta)
+
+
+
+# # Encrypt a message using the public key
+# def encrypt(message, public_key):
+#     q, beta = public_key  # Unpack the public key tuple
+#     return sum(message[i] * beta[i] for i in range(len(message)))
+
+
+# # Decrypt a ciphertext using the private key
+# def decrypt(ciphertext, private_key):
+#     q, w = private_key
+#     s = [0] * len(w)
+#     for i in range(len(w) - 1, -1, -1):
+#         if ciphertext >= w[i]:
+#             s[i] = 1
+#             ciphertext -= w[i]
+#     return s
+
+# # Pad the message to match the length of the public key
+# def pad_message(message, public_key):
+#     if not isinstance(public_key[1], list):
+#         raise ValueError("Knapsack weights should be provided as a list")
+    
+#     n = len(public_key[1])
+#     message_len = len(message)
+    
+#     if message_len < n:
+#         padding = [0] * (n - message_len)
+#         return padding + message
+#     elif message_len > n:
+#         raise ValueError("Message length exceeds knapsack length")
+#     else:
+#         return message
+
+
+# # Unpad the decrypted message
+# def unpad_message(padded_message):
+#     return [str(bit) for bit in padded_message]
+
+
+# # Example usage
+# if __name__ == "__main__":
+#      # Generate a key pair
+#     public_key, private_key = generate_key_pair(64)  # Adjust n for desired security level
+#     q, w = private_key  # Unpack private key tuple
+#     print("Private key (q, w):", private_key)
+#     print("Public key (q, beta):", (q, public_key))
+
+#     # Encrypt a message
+#     message = [0, 1, 0, 1, 1, 0, 1, 0]  # Binary message
+#     padded_message = pad_message(message, public_key)
+#     ciphertext = encrypt(padded_message, public_key)
+#     print("Ciphertext:", ciphertext)
+
+#     # Decrypt the ciphertext
+#     decrypted_message = decrypt(ciphertext, private_key)
+#     unpadded_message = unpad_message(decrypted_message)
+#     print("Decrypted message:", unpadded_message)
+
+
+
+    # In this version, the output is converted in hexadecimal format
+
 import random
 
 # Generate a superincreasing knapsack
@@ -47,13 +125,10 @@ def generate_key_pair(n):
     beta = [(r * wi) % q for wi in w]
     return (q, w), (q, beta)  # Return private key as tuple (q, w) and public key as tuple (q, beta)
 
-
-
 # Encrypt a message using the public key
 def encrypt(message, public_key):
     q, beta = public_key  # Unpack the public key tuple
     return sum(message[i] * beta[i] for i in range(len(message)))
-
 
 # Decrypt a ciphertext using the private key
 def decrypt(ciphertext, private_key):
@@ -81,11 +156,10 @@ def pad_message(message, public_key):
     else:
         return message
 
-
 # Unpad the decrypted message
 def unpad_message(padded_message):
-    return [str(bit) for bit in padded_message]
-
+    hex_message = ''.join(str(bit) for bit in padded_message)
+    return hex(int(hex_message, 2))[2:]  # Convert binary to hexadecimal and remove '0x' prefix
 
 # Example usage
 if __name__ == "__main__":
@@ -104,4 +178,6 @@ if __name__ == "__main__":
     # Decrypt the ciphertext
     decrypted_message = decrypt(ciphertext, private_key)
     unpadded_message = unpad_message(decrypted_message)
-    print("Decrypted message:", unpadded_message)
+    print("Decrypted message (hexadecimal):", unpadded_message)
+
+
